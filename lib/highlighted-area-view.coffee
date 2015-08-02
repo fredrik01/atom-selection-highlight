@@ -1,5 +1,6 @@
 {Range, CompositeDisposable} = require 'atom'
 _ = require 'underscore-plus'
+HighlightedStatusView = require './highlighted-status-view'
 
 module.exports =
 class HighlightedAreaView
@@ -11,6 +12,9 @@ class HighlightedAreaView
       @debouncedHandleSelection()
       @subscribeToActiveTextEditor()
     @subscribeToActiveTextEditor()
+
+  setStatusBar: (statusBar) ->
+    @statusBar = statusBar
 
   destroy: =>
     clearTimeout(@handleSelectionTimeout)
@@ -91,6 +95,11 @@ class HighlightedAreaView
             {type: 'highlight', class: @makeClasses()})
           @views.push marker
 
+    @statusNumber = new HighlightedStatusView()
+    @statusNumber.initialize(@statusBar)
+    @statusNumber.setCount(@views.length)
+    @statusNumber.attach()
+
   makeClasses: ->
     className = 'highlight-selected'
     if atom.config.get('highlight-selected.lightTheme')
@@ -114,6 +123,8 @@ class HighlightedAreaView
     outcome
 
   removeMarkers: =>
+    if @statusNumber
+      @statusNumber.destroy()
     return unless @views?
     return if @views.length is 0
     for view in @views

@@ -1,5 +1,9 @@
 HighlightedAreaView = require './highlighted-area-view'
 
+areaView: null
+statusView = null
+statusTile = null
+
 module.exports =
   config:
     onlyHighlightWholeWords:
@@ -25,10 +29,11 @@ module.exports =
       default: 20
       description: 'Defers searching for matching strings for X ms'
 
-  areaView: null
+  activate: (@state)
 
-  activate: (state) ->
+  consumeStatusBar: (statusBar) ->
     @areaView = new HighlightedAreaView()
+    @areaView.setStatusBar statusBar
 
   deactivate: ->
     @areaView?.destroy()
