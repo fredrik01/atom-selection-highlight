@@ -25,10 +25,10 @@ class HighlightedAreaView
     clearTimeout(@handleSelectionTimeout)
     @handleSelectionTimeout = setTimeout =>
       @handleSelection()
-    , atom.config.get('highlight-selected.timeout')
+    , atom.config.get('selection-highlight.timeout')
 
   listenForTimeoutChange: ->
-    atom.config.onDidChange 'highlight-selected.timeout', =>
+    atom.config.onDidChange 'selection-highlight.timeout', =>
       @debouncedHandleSelection()
 
   subscribeToActiveTextEditor: ->
@@ -66,12 +66,12 @@ class HighlightedAreaView
 
     return unless result?
     return if result[0].length < atom.config.get(
-      'highlight-selected.minimumLength') or
+      'selection-highlight.minimumLength') or
               result.index isnt 0 or
               result[0] isnt result.input
 
     regexFlags = 'g'
-    if atom.config.get('highlight-selected.ignoreCase')
+    if atom.config.get('selection-highlight.ignoreCase')
       regexFlags = 'gi'
 
     range =  [[0, 0], editor.getEofBufferPosition()]
@@ -79,7 +79,7 @@ class HighlightedAreaView
     @ranges = []
     regexSearch = result[0]
 
-    if atom.config.get('highlight-selected.onlyHighlightWholeWords')
+    if atom.config.get('selection-highlight.onlyHighlightWholeWords')
       if regexSearch.indexOf("\$") isnt -1 \
       and editor.getGrammar()?.name is 'PHP'
         regexSearch = regexSearch.replace("\$", "\$\\b")
@@ -102,16 +102,16 @@ class HighlightedAreaView
 
   makeClasses: ->
     className = 'highlight-selected'
-    if atom.config.get('highlight-selected.lightTheme')
+    if atom.config.get('selection-highlight.lightTheme')
       className += ' light-theme'
 
-    if atom.config.get('highlight-selected.highlightBackground')
+    if atom.config.get('selection-highlight.highlightBackground')
       className += ' background'
     className
 
   showHighlightOnSelectedWord: (range, selections) ->
     return false unless atom.config.get(
-      'highlight-selected.hideHighlightOnSelectedWord')
+      'selection-highlight.hideHighlightOnSelectedWord')
     outcome = false
     for selection in selections
       selectionRange = selection.getBufferRange()
