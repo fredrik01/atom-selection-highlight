@@ -11,7 +11,8 @@ class HighlightedStatusView extends HTMLDivElement
     @element.textContent = 'Found: ' + @count
 
   attach: ->
-    @tile = @statusBar.addLeftTile(priority: 100, item: this)
+    if @statusBar?
+      @tile = @statusBar.addLeftTile(priority: 100, item: this)
 
   detach: ->
     bar = document.getElementsByTagName 'highlighted-status-bar'
