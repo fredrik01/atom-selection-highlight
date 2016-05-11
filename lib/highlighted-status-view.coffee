@@ -16,7 +16,7 @@ class HighlightedStatusView extends HTMLDivElement
 
   detach: ->
     bar = document.getElementsByTagName 'highlighted-status-bar'
-    if bar != null
+    if bar != null && bar.length > 0
       if bar.item() != null
         el = bar[0]
         parent = el.parentNode

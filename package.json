@@ -17,7 +17,7 @@
   },
   "devDependencies": {
     "coffee-script": "1.9.0",
-    "coffeelint": "1.8.1",
+    "coffeelint": "^1.15.7",
     "coffeelint-jasmine": "0.0.2"
   },
   "consumedServices": {
