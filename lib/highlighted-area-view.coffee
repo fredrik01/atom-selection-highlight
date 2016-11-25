@@ -97,7 +97,7 @@ class HighlightedAreaView
 
     @statusNumber = new HighlightedStatusView()
     @statusNumber.initialize(@statusBar)
-    @statusNumber.setCount(@views.length)
+    @statusNumber.setCount(@views.length, @selections.length)
     @statusNumber.attach()
 
   makeClasses: ->
