@@ -1,7 +1,7 @@
 {
   "name": "selection-highlight",
   "main": "./lib/highlight-selected",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Highlights the current word selected when double clicking and shows number of occurrences in the status bar",
   "repository": {
     "type": "git",
