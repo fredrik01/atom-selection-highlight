@@ -7,8 +7,8 @@ class HighlightedStatusView extends HTMLDivElement
     @classList.add('hl-selected', 'inline-block')
     @appendChild(@element)
 
-  setCount: (@count) ->
-    @element.textContent = 'Found: ' + @count
+  setCount: (@count, @selected) ->
+    @element.textContent = 'Found: ' + @count + ' / ' + @selected
 
   attach: ->
     if @statusBar?
