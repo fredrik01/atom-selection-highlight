@@ -8,7 +8,11 @@ class HighlightedStatusView extends HTMLDivElement
     @appendChild(@element)
 
   setCount: (@count) ->
-    @element.textContent = 'Found: ' + @count
+    limit = atom.config.get('selection-highlight.highlightStop')
+    s = '' + @count
+    if limit < @count
+      s = limit + '/' + @count
+    @element.textContent = 'Found: ' + s
 
   attach: ->
     if @statusBar?
