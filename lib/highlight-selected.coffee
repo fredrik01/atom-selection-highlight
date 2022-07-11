@@ -21,6 +21,19 @@ module.exports =
     highlightBackground:
       type: 'boolean'
       default: false
+    searchOnPartialWords:
+      type: 'boolean'
+      default: false
+    searchAnyCharacter:
+      type: 'boolean'
+      default: false
+    highlightInOtherPanes:
+      type: 'boolean'
+      default: false
+    highlightStop:
+      type: 'integer'
+      default: 200
+      description: 'Will stop highlighting after this many have been found'
     minimumLength:
       type: 'integer'
       default: 0
