@@ -62,6 +62,8 @@ class HighlightedAreaView
 
     text = _.escapeRegExp(@selections[0].getText())
     regex = new RegExp("\\S*\\w*\\b", 'gi')
+    if atom.config.get('selection-highlight.searchAnyCharacter')
+      regex = new RegExp("[\\s\\S]*", 'gi')
     result = regex.exec(text)
 
     return unless result?
@@ -87,17 +89,41 @@ class HighlightedAreaView
         regexSearch =  "\\b" + regexSearch
       regexSearch = regexSearch + "\\b"
 
+    limit = atom.config.get('selection-highlight.highlightStop')
+    count = 0
+
     editor.scanInBufferRange new RegExp(regexSearch, regexFlags), range,
       (result) =>
-        unless @showHighlightOnSelectedWord(result.range, @selections)
+        count = count + 1
+        unless @showHighlightOnSelectedWord(result.range, @selections) or limit <= 0
+          limit = limit - 1
           marker = editor.markBufferRange(result.range)
           decoration = editor.decorateMarker(marker,
             {type: 'highlight', class: @makeClasses()})
           @views.push marker
 
+    if atom.config.get('selection-highlight.highlightInOtherPanes')
+      for pane in atom.workspace.getPanes()
+        item = pane.getActiveItem()
+        if (item?) and (item.constructor.name is editor.constructor.name) and not (item is editor)
+          range = [[0, 0], item.getEofBufferPosition()]
+          item.scanInBufferRange new RegExp(regexSearch, regexFlags), range,
+            (result) =>
+              count = count + 1
+              unless limit <= 0
+                limit = limit - 1
+                marker = item.markBufferRange(result.range)
+                decoration = item.decorateMarker(marker,
+                  {type: 'highlight', class: @makeClasses()})
+                @views.push marker
+      
+      
+      
+
+
     @statusNumber = new HighlightedStatusView()
     @statusNumber.initialize(@statusBar)
-    @statusNumber.setCount(@views.length)
+    @statusNumber.setCount(count)
     @statusNumber.attach()
 
   makeClasses: ->
@@ -133,7 +159,9 @@ class HighlightedAreaView
     @views = []
 
   isWordSelected: (selection) ->
-    if selection.getBufferRange().isSingleLine()
+    if atom.config.get('selection-highlight.searchOnPartialWords')
+      true
+    else if selection.getBufferRange().isSingleLine()
       selectionRange = selection.getBufferRange()
       lineRange = @getActiveEditor().bufferRangeForBufferRow(
         selectionRange.start.row)
